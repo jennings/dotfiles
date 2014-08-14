@@ -1,5 +1,7 @@
-# Set user.name and user.email in
-# ~/.config/git/config
+[user]
+	name = Stephen Jennings
+	# forces setting the email address on each repository
+	email = (none)
 [core]
 	editor = gvim -f
 	excludesfile = /Users/stephen/.gitignore
@@ -13,6 +15,7 @@
 	unassume = update-index --no-assume-unchanged
 	assumed = !git ls-files -v | grep ^h | cut -c 3-
 	ignored = ls-files -ci --exclude-standard
+	st = status
 [color]
 	ui = true
 [log]
