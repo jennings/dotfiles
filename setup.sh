@@ -45,22 +45,3 @@ for f in *; do
     [ ! -e "$HOME/.$f" ] && $LNCMD -s "$HERE/$f" "$HOME/.$f"
 
 done
-
-
-# Create user.name and user.email values in $XDG_CONFIG_HOME
-# This prevents spam crawlers from finding them by scraping GitHub
-
-GITXDGHOME="$HOME/${XDG_CONFIG_HOME:-.config}/git"
-[ ! -d "$GITXDGHOME" ] && $MKDIRCMD -p "$GITXDGHOME"
-
-currentgitname=$(git config --file $GITXDGHOME/config user.name)
-if [ -z "$currentgitname" ]; then
-    read -p "Enter your git user.name:  " name
-    $GITCMD config --file "$GITXDGHOME/config" user.name "$name"
-fi
-
-currentgitemail=$(git config --file $GITXDGHOME/config user.email)
-if [ -z "$currentgitemail" ]; then
-    read -p "Enter your git user.email: " email
-    $GITCMD config --file "$GITXDGHOME/config" user.email "$email"
-fi
