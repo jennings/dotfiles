@@ -1,7 +1,6 @@
 [user]
 	name = Stephen Jennings
 	# forces setting the email address on each repository
-	email = (none)
 [core]
 	editor = gvim -f
 	excludesfile = /Users/stephen/.gitignore
@@ -33,3 +32,5 @@
 	tool = kdiff3
 [mergetool]
 	keepBackup = false
+[init]
+	templateDir = ~/.dotfiles/gittemplate
