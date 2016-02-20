@@ -32,5 +32,11 @@
 	tool = kdiff3
 [mergetool]
 	keepBackup = false
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[grep]
+	lineNumber = true
 [init]
 	templateDir = ~/.dotfiles/gittemplate
