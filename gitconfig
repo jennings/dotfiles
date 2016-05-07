@@ -1,8 +1,8 @@
 [user]
 	name = Stephen Jennings
-	# forces setting the email address on each repository
+	useConfigOnly = true
 [core]
-	editor = gvim -f
+	editor = vim -f
 	excludesfile = /Users/stephen/.gitignore
 	autocrlf = input
 	safecrlf = true
@@ -38,5 +38,7 @@
 	required = true
 [grep]
 	lineNumber = true
-[init]
-	templateDir = ~/.dotfiles/gittemplate
+[url "ssh://git@heroku.com/"]
+	insteadOf = https://git.heroku.com/
+[fetch]
+	prune = true
