@@ -3,3 +3,6 @@
 *.swp
 tags
 *.py[co]
+
+# Ansible retry files
+*.retry
