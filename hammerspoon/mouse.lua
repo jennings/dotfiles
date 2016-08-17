@@ -13,6 +13,8 @@ local interceptBackForward = hs.eventtap.new({25}, function(evt)
     elseif key == 4 then
         hs.eventtap.event.newKeyEvent({"cmd"}, "right", true):post()
     end
+    -- swallow the middle-click
+    return true
 end)
 
 local mouseMenu = hs.menubar.new():setTitle("🖱")
