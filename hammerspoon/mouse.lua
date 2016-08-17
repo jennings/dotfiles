@@ -7,14 +7,19 @@
 -- with (games, maybe?).
 
 local interceptBackForward = hs.eventtap.new({25}, function(evt)
+    -- Return true from this function to swallow the existing event.
+    -- Return false to allow it through.
     local key = evt:getProperty(3)
     if key == 3 then
         hs.eventtap.event.newKeyEvent({"cmd"}, "left", true):post()
+        return true
     elseif key == 4 then
         hs.eventtap.event.newKeyEvent({"cmd"}, "right", true):post()
+        return true
+    else
+        -- Let the middle-click through
+        return false
     end
-    -- swallow the middle-click
-    return true
 end)
 
 local mouseMenu = hs.menubar.new():setTitle("🖱")
