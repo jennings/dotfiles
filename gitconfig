@@ -8,6 +8,7 @@
 	safecrlf = true
 [alias]
 	lg = log --oneline --graph --decorate
+	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
 	home = !open \"$(git config remote.origin.url)\"
 	sub = submodule
 	assume = update-index --assume-unchanged
@@ -15,6 +16,7 @@
 	assumed = !git ls-files -v | grep ^h | cut -c 3-
 	ignored = ls-files -ci --exclude-standard
 	st = status
+	br = branch
 [color]
 	ui = true
 [log]
