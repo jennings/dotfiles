@@ -1,13 +1,17 @@
+local network = {}
+
 local SUDO = "/usr/bin/sudo"
 local IFCONFIG = "/sbin/ifconfig"
 local DEFAULT_INTERFACE = "en0"
 
-function restartNetwork(interface)
+local startNetwork, notifyNetwork
+
+function network.restartNetwork(interface)
     print("Marking interface 'down': " .. interface)
     hs.task.new(SUDO, startNetwork(interface), { IFCONFIG, interface, "down" }):start()
 end
 
-function startNetwork(interface)
+startNetwork = function (interface)
     return function(exitCode, stdout, stderr)
         if exitCode == 0 then
             print("Marking interface 'up': " .. interface)
@@ -19,7 +23,7 @@ function startNetwork(interface)
     end
 end
 
-function notifyNetwork(interface)
+notifyNetwork = function (interface)
     return function (exitCode, stdout, stderr)
         if exitCode == 0 then
             print("Complete")
@@ -31,13 +35,12 @@ function notifyNetwork(interface)
     end
 end
 
-j.network = {}
-j.network.restartNetwork = restartNetwork
-
 hs.urlevent.bind("bounce-network", function (name, params)
     local interface = DEFAULT_INTERFACE
     if params.interface ~= nil then
         interface = params.interface
     end
-    restartNetwork(interface)
+    network.restartNetwork(interface)
 end)
+
+return network

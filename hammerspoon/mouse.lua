@@ -6,6 +6,8 @@
 -- just in case I run across something that this interception logic interferes
 -- with (games, maybe?).
 
+local mouse = {}
+
 local interceptBackForward = hs.eventtap.new({25}, function(evt)
     -- Return true from this function to swallow the existing event.
     -- Return false to allow it through.
@@ -24,18 +26,20 @@ end)
 
 local mouseMenu = hs.menubar.new():setTitle("🖱")
 
-function enableIntercept()
+function mouse.enableIntercept()
     interceptBackForward:start()
     mouseMenu:setMenu({
-        { title="Send back/forward keys", state="on", fn=disableIntercept}
+        { title="Send back/forward keys", state="on", fn=mouse.disableIntercept}
     })
 end
 
-function disableIntercept()
+function mouse.disableIntercept()
     interceptBackForward:stop()
     mouseMenu:setMenu({
-        { title="Send back/forward keys", state="off", fn=enableIntercept}
+        { title="Send back/forward keys", state="off", fn=mouse.enableIntercept}
     })
 end
 
-enableIntercept()
+mouse.enableIntercept()
+
+return mouse
