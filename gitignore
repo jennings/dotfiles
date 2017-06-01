@@ -4,5 +4,7 @@
 tags
 *.py[co]
 
+.vscode/
+
 # Ansible retry files
 *.retry
