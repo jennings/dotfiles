@@ -32,6 +32,8 @@
 	home = !open \"$(git config remote.origin.url)\"
 	copr = "!f() { git fetch origin pull/$1/head:pull/$1; git checkout pull/$1; }; f"
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
+	co = checkout
+	amend = commit --amend --reuse-message HEAD
 [color]
 	ui = true
 [log]
