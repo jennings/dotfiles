@@ -34,6 +34,7 @@
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 	co = checkout
 	amend = commit --amend --reuse-message HEAD
+	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
 [color]
 	ui = true
 [log]
