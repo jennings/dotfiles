@@ -10,11 +10,11 @@
 	# shortcuts
 	st = status
 	br = branch
-	lg = log --graph --date="format:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s'
-	lga = log --graph --date="format:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%an)%d %s'
-	lgc = log --graph --date="format:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%cn)%d %s'
-	out = log --graph --date="format:%Y-%m-%d" --pretty='tformat:%C(auto)%h %s' @{u}..
-	in = log --graph --date="format:%Y-%m-%d" --pretty='tformat:%C(auto)%h %s' ..@{u}
+	lg = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s'
+	lga = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%an)%d %s'
+	lgc = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%cn)%d %s'
+	incoming = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
+	outgoing = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
 	sub = submodule
 
 	# rebasing
@@ -56,6 +56,7 @@
 	tool = kdiff3
 [mergetool]
 	keepBackup = false
+	prompt = false
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
