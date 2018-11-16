@@ -33,7 +33,7 @@
 	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
 	home = !open \"$(git config remote.origin.url)\"
 	copr = "!f() { git fetch origin pull/$1/head:pull/$1; git checkout pull/$1; }; f"
-	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
+	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
 	co = checkout
 	amend = commit --amend --reuse-message HEAD
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
