@@ -6,6 +6,7 @@
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	safecrlf = true
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [alias]
 	# shortcuts
 	st = status
