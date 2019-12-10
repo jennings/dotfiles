@@ -39,8 +39,9 @@ HERE=$(python -c "import os.path; print os.path.relpath(os.path.realpath('.'), o
 
 for f in *; do
 
-    # Don't do anything with the setup file
+    # Don't do anything with the setup file or scripts directory
     [ "$f" == "setup.sh" ] && continue
+    [ "$f" == "scripts" ] && continue
 
     # Don't overwrite a dotfile that already exists
     [ ! -e "$HOME/.$f" ] && $LNCMD -s "$HERE/$f" "$HOME/.$f"
