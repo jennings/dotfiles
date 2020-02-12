@@ -14,7 +14,9 @@
 	lga = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%an)%d %s'
 	lgc = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%cn)%d %s'
 	incoming = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
+	in = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
 	outgoing = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
+	out = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
 	sub = submodule
 
 	# rebasing
@@ -39,6 +41,9 @@
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
 	dt = difftool
 	mt = mergetool
+	cp = cherry-pick
+	wip = "!f() { git add -A; git commit --no-verify -m wip; }; f"
+	uncommit = reset --soft HEAD~1
 [color]
 	ui = true
 [log]
