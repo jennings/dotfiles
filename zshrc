@@ -1,37 +1,56 @@
-ZSH=$HOME/.oh-my-zsh
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
 
-# If you set this to "random", it'll load a random theme
-ZSH_THEME="jennings"
-
-alias erl="nocorrect erl"
-alias rspec="nocorrect rspec"
-alias -g lg="lg"
-
-# My fingers forget where I am
-alias dir="ls"
-alias cls="clear"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=()
-
-source $ZSH/oh-my-zsh.sh
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
 
 # Customize to your needs...
 
-export EDITOR="/usr/local/bin/mvim"
+#prompt nicoulaj
+prompt steeef
+
+# No need for ^S and ^Q to ruin everything
+unsetopt flow_control
+
+alias dir="ls"
+alias cls="clear"
+#alias emacs="open -a /Applications/Emacs.app $1"
+alias clip=pbcopy
+alias paste=pbpaste
+alias code=code-insiders
+alias dockerc=docker-compose
+
+export EDITOR="/usr/local/bin/vim"
+export VISUAL=$EDITOR
 export FIGNORE=".o:~:.swp"
-export GOPATH=~/Code/go
+export GOPATH=~
 export LESS=-FRSX
 
-PATH=$GOPATH/bin:$PATH
-PATH=/usr/local/share/npm/bin:$PATH
 PATH=/usr/local/bin:$PATH
+PATH=/usr/local/Cellar/node/6.8.1/bin:$PATH
+PATH=~/.config/yarn/global/node_modules/.bin:$PATH
+PATH=~/.cargo/bin:$PATH
+PATH=~/.cabal/bin:$PATH
 PATH=~/bin:$PATH
 export PATH
 
+export ANSIBLE_INVENTORY=~/.ansible_hosts.yml
+export PIP_CONFIG_FILE=${XDG_CONFIG_HOME:-$HOME/.config}/pip/pip.conf
+export FZF_DEFAULT_COMMAND='fd --type f'
+
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# OPAM configuration
+. ~/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+[ -s "/Users/stephen/.dnx/dnvm/dnvm.sh" ] && . "/Users/stephen/.dnx/dnvm/dnvm.sh" # Load dnvm
+
+# z
+[ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
+
+eval $(thefuck --alias)
