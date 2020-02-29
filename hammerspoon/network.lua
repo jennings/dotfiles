@@ -1,3 +1,10 @@
+-- Run the following script to allow sudo to run without a password:
+--
+-- sudo cat >|/private/etc/sudoers.d/hammerspoon_network <<HERE
+-- $SUDO_USER ALL=(root) NOPASSWD: /sbin/ifconfig en0 down
+-- $SUDO_USER ALL=(root) NOPASSWD: /sbin/ifconfig en0 up
+-- HERE
+
 local network = {}
 
 local SUDO = "/usr/bin/sudo"
