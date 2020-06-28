@@ -7,7 +7,7 @@
 
 local network = {}
 
-local SUDO = "/usr/bin/sudo"
+local sudo = require "sudo"
 local IFCONFIG = "/sbin/ifconfig"
 local DEFAULT_INTERFACE = "en0"
 
@@ -15,14 +15,16 @@ local startNetwork, notifyNetwork
 
 function network.restartNetwork(interface)
     print("Marking interface 'down': " .. interface)
-    hs.task.new(SUDO, startNetwork(interface), { IFCONFIG, interface, "down" }):start()
+    sudo(startNetwork(interface), { IFCONFIG, interface, "down" }):start()
 end
 
 startNetwork = function (interface)
     return function(exitCode, stdout, stderr)
         if exitCode == 0 then
-            print("Marking interface 'up': " .. interface)
-            hs.task.new(SUDO, notifyNetwork(interface), { IFCONFIG, interface, "up" }):start()
+            hs.timer.doAfter(1, function ()
+                print("Marking interface 'up': " .. interface)
+                sudo(notifyNetwork(interface), { IFCONFIG, interface, "up" }):start()
+            end)
         else
             hs.notify.show("Error", "'ifconfig en0 down' exited with code: " .. exitCode, stderr)
             print(stderr)
