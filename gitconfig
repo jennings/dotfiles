@@ -6,7 +6,9 @@
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	safecrlf = true
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta --hunk-style plain
+[interactive]
+	diffFilter = delta --color-only
 [alias]
 	# shortcuts
 	st = status
