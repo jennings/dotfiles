@@ -11,19 +11,33 @@
 	diffFilter = delta --color-only
 [alias]
 	# shortcuts
-	st = status
 	br = branch
+	co = checkout
+	cp = cherry-pick
+	dt = difftool
 	lg = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s'
 	lga = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%an)%d %s'
 	lgc = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd|%<(10,trunc)%cn)%d %s'
-	incoming = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
-	in = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
-	outgoing = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
-	out = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
+	mt = mergetool
+	st = status
 	sub = submodule
+	wt = worktree
+
+	# comparing local and remote branches
+	in = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
+	inm = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..origin/master
+	out = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
+	outm = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' origin/master..
+	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
+
+	# finding obsolete branches
+	obsolete = !git branch --merged origin/master | grep -v master | grep -v HEAD
+	obsoleter = !git branch -r --merged origin/master | grep -v master | grep -v HEAD | sed 's@origin/@@'
+	merged = !git branch --merged origin/master | grep -v master | grep -v HEAD
+	mergedr = !git branch -r --merged origin/master | grep -v master | grep -v HEAD | sed 's@origin/@@'
 
 	# rebasing
-	fix = commit --fixup
+	fix = commit --no-verify --fixup
 	ri = rebase -i --autosquash
 	cont = rebase --continue
 	abort = rebase --abort
@@ -35,17 +49,15 @@
 	assumed = !git ls-files -v | grep ^h | cut -c 3-
 	ignored = ls-files -ci --exclude-standard
 
-	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
-	home = !open \"$(git config remote.origin.url)\"
+	# interacting with github/bitbucket
 	copr = "!f() { git fetch origin pull/$1/head:pull/$1; git checkout pull/$1; }; f"
-	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
-	co = checkout
+	home = "!f() { open $(git-upstream-url home --remote $(git config remote.origin.url)) ; }; f"
+	pr = "!f() { open $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $(git rev-parse --abbrev-ref HEAD)) ; }; f"
+
 	amend = commit --amend --reuse-message HEAD
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
-	dt = difftool
-	mt = mergetool
+	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
 	updatesubs = "submodule foreach \"git pull; git submodule update --init --recursive\""
-	cp = cherry-pick
 	wip = "!f() { git add -A; git commit --no-verify -m wip; }; f"
 	uncommit = reset --soft HEAD~1
 [color]
