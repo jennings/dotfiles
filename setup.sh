@@ -1,5 +1,5 @@
 #/bin/bash
-set -e
+set -euo pipefail
 
 usage()
 {
@@ -37,13 +37,10 @@ HERE=$(python -c "import os.path; print os.path.relpath(os.path.realpath('.'), o
 
 # For each file in this repository, create a symlink in $HOME
 
-for f in *; do
+for f in dotfiles/*; do
 
-    # Don't do anything with the setup file or scripts directory
-    [ "$f" == "setup.sh" ] && continue
-    [ "$f" == "scripts" ] && continue
-
+    fn=$(basename $f)
     # Don't overwrite a dotfile that already exists
-    [ ! -e "$HOME/.$f" ] && $LNCMD -s "$HERE/$f" "$HOME/.$f"
+    [[ ( ! -e "$HOME/.$fn" ) || ( -L "$HOME/.$fn" ) ]] && $LNCMD -sf "$HERE/$f" "$HOME/.$fn"
 
 done
