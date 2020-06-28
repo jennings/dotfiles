@@ -1,3 +1,5 @@
+# personal stuff
+
 brew "ansible"
 brew "asciinema"
 brew "automake"
@@ -30,6 +32,14 @@ brew "tree"
 brew "yarn"
 brew "z"
 
+cask "google-cloud-sdk"
 cask "kdiff3"
+cask "ngrok"
 cask "obs"
+cask "osxfuse"
 cask "vagrant"
+
+# for work
+
+brew "ffmpeg"
+brew "gstreamer"
