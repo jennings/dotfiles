@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "argc: $#"
+for arg in "$@"
+do
+    echo "arg: $arg"
+done
+
