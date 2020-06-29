@@ -40,12 +40,12 @@ for f in dotfiles/*; do
 
     fn=$(basename $f)
     # Don't overwrite a dotfile that already exists
-    [[ ( ! -e "$HOME/.$fn" ) || ( -L "$HOME/.$fn" ) ]] && $LNCMD -sf "$HERE/$f" "$HOME/.$fn"
+    [[ ( ! -e "$HOME/.$fn" ) || ( -L "$HOME/.$fn" ) ]] && $LNCMD -shf "$HERE/$f" "$HOME/.$fn"
 
 done
 
 # For each binary, create ~/bin/filename
 $MKDIRCMD -p "$HOME/bin"
 for f in bin/*; do
-    [[ ( ! -e "$HOME/$f" ) || ( -L "$HOME/$f" ) ]] && $LNCMD -sf "../$HERE/$f" "$HOME/$f"
+    [[ ( ! -e "$HOME/$f" ) || ( -L "$HOME/$f" ) ]] && $LNCMD -shf "../$HERE/$f" "$HOME/$f"
 done
