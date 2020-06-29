@@ -35,12 +35,17 @@ fi
 
 HERE=$(python -c "import os.path; print os.path.relpath(os.path.realpath('.'), os.path.expanduser('~'))")
 
-# For each file in this repository, create a symlink in $HOME
-
+# For each dotfile, create ~/.filename
 for f in dotfiles/*; do
 
     fn=$(basename $f)
     # Don't overwrite a dotfile that already exists
     [[ ( ! -e "$HOME/.$fn" ) || ( -L "$HOME/.$fn" ) ]] && $LNCMD -sf "$HERE/$f" "$HOME/.$fn"
 
+done
+
+# For each binary, create ~/bin/filename
+$MKDIRCMD -p "$HOME/bin"
+for f in bin/*; do
+    [[ ( ! -e "$HOME/$f" ) || ( -L "$HOME/$f" ) ]] && $LNCMD -sf "../$HERE/$f" "$HOME/$f"
 done

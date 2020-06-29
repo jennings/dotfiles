@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+echo "${bold}Do you want to perform these actions?${normal}"
+echo "  Only 'yes' will be accepted to approve."
+echo "  "
+echo -n "  ${bold}Enter a value:${normal} "
+
+read CONFIRM
+
+[[ ! -z "$CONFIRM" && $CONFIRM = 'yes' ]]
