@@ -31,8 +31,6 @@
 	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
 
 	# finding obsolete branches
-	obsolete = !git branch --merged origin/master | grep -v master | grep -v HEAD
-	obsoleter = !git branch -r --merged origin/master | grep -v master | grep -v HEAD | sed 's@origin/@@'
 	merged = !git branch --merged origin/master | grep -v master | grep -v HEAD
 	mergedr = !git branch -r --merged origin/master | grep -v master | grep -v HEAD | sed 's@origin/@@'
 
