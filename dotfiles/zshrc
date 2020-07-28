@@ -23,7 +23,6 @@ alias cls="clear"
 #alias emacs="open -a /Applications/Emacs.app $1"
 alias clip=pbcopy
 alias paste=pbpaste
-alias code=code-insiders
 alias dockerc=docker-compose
 
 export EDITOR="/usr/local/bin/vim"
