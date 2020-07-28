@@ -12,6 +12,10 @@ clean: brew-clean
 dotfiles:
 	./setup.sh
 
+.PHONY: vscode
+vscode:
+	cd vscode && ./sync.sh
+
 .PHONY: brew
 brew: Brewfile.lock.json
 Brewfile.lock.json: Brewfile
