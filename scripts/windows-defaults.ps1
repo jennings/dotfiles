@@ -7,6 +7,18 @@ reg add HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer /v DisableSearchBoxSug
 reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v BingSearchEnabled /t REG_DWORD /d 0
 reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v CortanaConsent /t REG_DWORD /d 0
 
+#################
+# Office
+#################
+
+# Disable the cursor animation
+@("15.0", "16.0") | % {
+	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Office\$_\Common\Graphics)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Office\$_\Common -Name Graphics | Out-Null
+	}
+	Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Office\$_\Common\Graphics -Name DisableAnimations -Type DWord -Value 1
+}
+
 #######################################################################################
 # The following is copied from: https://gist.github.com/NickCraver/7ebf9efbfd0c3eab72e9
 #######################################################################################
