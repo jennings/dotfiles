@@ -40,6 +40,7 @@ cask "kdiff3"
 cask "ngrok"
 cask "obs"
 cask "osxfuse"
+cask "suspicious-package"
 cask "vagrant"
 
 # for work
