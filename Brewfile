@@ -35,6 +35,7 @@ brew "yarn"
 brew "z"
 
 tap "homebrew/cask"
+cask "docker"
 cask "google-cloud-sdk"
 cask "kdiff3"
 cask "ngrok"
