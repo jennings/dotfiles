@@ -9,6 +9,7 @@ brew "bat"
 brew "cmake"
 brew "ctags"
 brew "fd" # used as FZF_DEFAULT_COMMAND
+brew "fzf"
 brew "git"
 brew "git-delta"
 brew "go"
