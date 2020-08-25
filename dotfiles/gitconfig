@@ -59,6 +59,7 @@
 	pr = "!f() { open $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $(git rev-parse --abbrev-ref HEAD)) ; }; f"
 
 	amend = commit --amend --reuse-message HEAD
+	startnew = "!f() { [ -z \"$1\" ] && echo 'Must provide branch name' && exit 1; git checkout --no-track -b $1 origin/$(git config remote.origin.defaultBranch || echo master);}; f"
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
 	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
 	updatesubs = "submodule foreach \"git pull; git submodule update --init --recursive\""
