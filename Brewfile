@@ -40,16 +40,23 @@ brew "hashicorp/tap/terraform"
 brew "hashicorp/tap/terraform-ls"
 
 tap "homebrew/cask"
+cask "azure-data-studio"
 cask "docker"
 cask "google-cloud-sdk"
 cask "kdiff3"
 cask "ngrok"
 cask "obs"
 cask "osxfuse"
+cask "postman"
 cask "suspicious-package"
 cask "vagrant"
+cask "vlc"
 
 # for work
 
 brew "ffmpeg"
 brew "gstreamer"
+cask "pritunl"
+
+tap "octopusdeploy/taps"
+brew "octopusdeploy/taps/octopuscli"
