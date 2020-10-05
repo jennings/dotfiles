@@ -1,0 +1,50 @@
+#!/bin/bash -euo pipefail
+
+show_help()
+{
+    echo "Usage: $1 [-b color] [-n separator] name count"
+    echo "  -b color    Set the background color (red|blue|yellow|green)"
+    echo "  -n char     Change the newline string"
+}
+
+set_background()
+{
+    case "$1" in
+    red)
+        bg="\033[41m"
+        ;;
+    blue)
+        bg="\033[44m"
+        ;;
+    yellow)
+        bg="\033[43m\033[30m"
+        ;;
+    green)
+        bg="\033[42m\033[97m"
+        ;;
+    esac
+}
+
+grey="\033[100m"
+
+sep="\n"
+bg="\033[41m"
+
+OPTIND=1
+while getopts "hn:b:" opt; do
+    case "$opt" in
+    h)
+        show_help "$0"
+        exit 0
+        ;;
+    n)
+        sep="$OPTARG"
+        ;;
+    b)
+        set_background "$OPTARG"
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+
+echo -n -e "$grey $1 $bg $2 \033[0m$sep"
