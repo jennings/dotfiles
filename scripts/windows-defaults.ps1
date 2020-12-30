@@ -7,6 +7,9 @@ reg add HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer /v DisableSearchBoxSug
 reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v BingSearchEnabled /t REG_DWORD /d 0
 reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search /v CortanaConsent /t REG_DWORD /d 0
 
+reg add HKCU\SOFTWARE\Microsoft\ResKit\Robocopy /v RetryMax /t REG_DWORD /d 5
+reg add HKCU\SOFTWARE\Microsoft\ResKit\Robocopy /v WaitTime /t REG_DWORD /d 5000
+
 #################
 # Office
 #################
