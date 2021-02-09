@@ -63,8 +63,8 @@
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
 	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
 	updatesubs = "submodule foreach \"git pull; git submodule update --init --recursive\""
-	wip = "!f() { git add -A; git commit --no-verify -m wip; }; f"
-	uncommit = reset --soft HEAD~1
+	wip = "!f() { git commit --no-verify --allow-empty -m 'wip: staged'; git add -A; git commit --no-verify --allow-empty -m 'wip: unstaged'; }; f"
+	unwip = "!f() { git reset HEAD~1; git reset --soft HEAD~1; }; f"
 [color]
 	ui = true
 [log]
