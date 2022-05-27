@@ -6,7 +6,7 @@
 [includeIf "gitdir:~/src/github.com/**"]
 	path = ~/.gitconfig.personal
 [core]
-	editor = vim -f
+	editor = nvim -f
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	safecrlf = true
@@ -31,9 +31,9 @@
 
 	# comparing local and remote branches
 	in = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
-	inm = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..origin/master
+	inm = !git log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..origin/$(git config remote.origin.defaultBranch || echo HEAD)
 	out = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
-	outm = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' origin/master..
+	outm = !git log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' origin/$(git config remote.origin.defaultBranch || echo HEAD)..
 	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
 
 	# finding obsolete branches
@@ -59,12 +59,15 @@
 	pr = "!f() { open $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $(git rev-parse --abbrev-ref HEAD)) ; }; f"
 
 	amend = commit --amend --reuse-message HEAD
-	startnew = "!f() { [ -z \"$1\" ] && echo 'Must provide branch name' && exit 1; git checkout --no-track -b $1 origin/$(git config remote.origin.defaultBranch || echo master);}; f"
+	startnew = "!f() { [ -z \"$1\" ] && echo 'Must provide branch name' && exit 1; git checkout --no-track -b $1 origin/$(git config remote.origin.defaultBranch || echo HEAD);}; f"
 	pushnew = "!f() { git push -u ${1:-origin} $(git rev-parse --abbrev-ref HEAD);}; f"
 	server = !echo git server running on git://$(hostname)/$(basename $(pwd)) && git daemon --verbose --export-all --base-path=.. --reuseaddr ../$(basename $(pwd))
 	updatesubs = "submodule foreach \"git pull; git submodule update --init --recursive\""
 	wip = "!f() { git commit --no-verify --allow-empty -m 'wip: staged'; git add -A; git commit --no-verify --allow-empty -m 'wip: unstaged'; }; f"
 	unwip = "!f() { git reset HEAD~1; git reset --soft HEAD~1; }; f"
+	uncommit = reset --soft HEAD~1
+	pi = pull --rebase=interactive
+	detach = checkout --detach HEAD
 [color]
 	ui = true
 [log]
