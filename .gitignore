@@ -1,1 +1,8 @@
-Brewfile.lock.json
+# This global .gitignore should only have patterns specific to this computer or
+# my tools, such as the .swp files that vim creates.
+# Files that everybody has to deal wtih, such as Python .pyc files, should be
+# added to the repository .gitignore file.
+
+*~
+.DS_Store
+*.swp
