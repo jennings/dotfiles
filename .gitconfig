@@ -10,7 +10,7 @@
 	excludesfile = ~/.gitignore
 	autocrlf = input
 	safecrlf = true
-	pager = delta --hunk-style plain
+	pager = delta --hunk-header-style plain
 [init]
 	defaultBranch = trunk
 [interactive]
