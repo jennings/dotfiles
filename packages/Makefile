@@ -8,14 +8,6 @@ install: dotfiles brew
 .PHONY: clean
 clean: brew-purge
 
-.PHONY: dotfiles
-dotfiles:
-	./setup.sh
-
-.PHONY: vscode
-vscode:
-	cd vscode && ./sync.sh
-
 .PHONY: brew
 brew: Brewfile.lock.json brew-clean
 Brewfile.lock.json: Brewfile
