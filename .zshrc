@@ -24,12 +24,14 @@ alias cls="clear"
 alias clip=pbcopy
 alias paste=pbpaste
 alias dockerc=docker-compose
+alias dotfiles='git --git-dir="$DOTFILES_REPO" --work-tree=$HOME'
 
 export EDITOR="/usr/local/bin/vim"
 export VISUAL=$EDITOR
 export FIGNORE=".o:~:.swp"
 export GOPATH=~
 export LESS=-FRSX
+export DOTFILES_REPO="~/src/github.com/jennings/dotfiles.git"
 
 PATH=/usr/local/bin:$PATH
 PATH=/usr/local/Cellar/node/6.8.1/bin:$PATH
