@@ -3,8 +3,8 @@
 	useConfigOnly = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[includeIf "gitdir:~/src/github.com/**"]
-	path = ~/.gitconfig.personal
+[include]
+	path = ~/.gitconfig.local
 [core]
 	editor = nvim -f
 	excludesfile = ~/.gitignore
