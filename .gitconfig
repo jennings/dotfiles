@@ -3,11 +3,9 @@
 	useConfigOnly = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[include]
-	path = ~/.gitconfig.local
 [core]
 	editor = nvim -f
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore.global
 	autocrlf = input
 	safecrlf = true
 	pager = delta --hunk-header-style plain
@@ -98,3 +96,6 @@
 	insteadOf = https://git.heroku.com/
 [rebase]
 	autoSquash = true
+# must be last so it can recursively include .gitconfig.windows
+[include]
+	path = ~/.gitconfig.local
