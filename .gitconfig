@@ -15,7 +15,10 @@
 	diffFilter = delta --color-only
 [alias]
 	# shortcuts
-	br = branch
+	br = !"f() { \
+		upstream=origin/$(git config remote.origin.defaultBranch || echo HEAD); \
+		git branch --sort=creatordate --format='%(HEAD) %(align:38,left)%(refname:short)%(end) (%(color:yellow)%(creatordate:short)%(color:default))%(color:red) [%(ahead-behind:'$upstream')]%(if)%(upstream:track)%(then)%(color:cyan)%(upstream:track)%(end) %(color:default)%(contents:subject)'; \
+		}; f"
 	co = checkout
 	cp = cherry-pick
 	dt = difftool
