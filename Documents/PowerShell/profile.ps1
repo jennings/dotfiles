@@ -16,7 +16,7 @@ ImportIf-Module -Name Posh-Git -PostImport {
     $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text = '`n'
 }
 ImportIf-Module -Name ZLocation
-import-module (Join-Path (Split-Path -Parent $PROFILE) "Toolkit.psm1") -DisableNameChecking
+import-module (Join-Path $PSScriptRoot "Toolkit.psm1") -DisableNameChecking
 
 function dotfiles {
     git --git-dir=${env:DOTFILES_REPO} --work-tree=$HOME $Args
