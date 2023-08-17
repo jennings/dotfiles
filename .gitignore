@@ -1,3 +1,8 @@
 # This .gitignore is used by the dotfiles repository
 
 __pycache__/
+
+# In Git, I've set status.showUntrackedFiles = false, but jj doesn't have an
+# equivalent setting yet, so all files need to be gitignored by default to use
+# this repo with jj
+*
