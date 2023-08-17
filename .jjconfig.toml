@@ -1,0 +1,46 @@
+[user]
+name = "Stephen Jennings"
+
+[ui]
+editor = "nvim"
+diff-editor = "meld"
+#diff-editor = "kdiff3" # doesn't seem to support deleting files
+merge-editor = "kdiff3"
+
+default-command = "logr"
+
+diff.format = "git"
+
+pager = ["delta", "--hunk-header-style", "plain"]
+paginate = "auto"
+
+[revsets]
+# log = "@ | ancestors((remote_branches() | tags()).., 2) | trunk()"
+# default:
+log = "@ | ancestors((immutable_heads() | no_log_heads()).., 2) | heads((immutable_heads() | no_log_heads()))"
+
+[revset-aliases]
+'no_log_heads()' = 'none()'
+#'this_stack()' = 'trunk()..(@::) | (trunk()..@)-'
+'this_stack()' = 'trunk()..(@::)'
+'this_stack_with_context()' = 'this_stack() | ancestors(this_stack(), 2)'
+'branches_in_this_stack()' = 'remote_branches() & this_stack()'
+'stack()' = 'this_stack() | ancestors((branches_in_this_stack()::), 2)'
+'slice()' = 'trunk()::(@::)'
+'behind()' = 'ancestors((trunk()..branches())::, 2)'
+'hanging()' = "branches() | remote_branches() | tags()"
+
+[aliases]
+logr = ["log", "--reversed"]
+# viewing history
+behind = ["logr", "-r", "behind()"]
+stack = ["logr", "-r", "this_stack_with_context()"]
+mine = ["logr", "-r", "trunk() | (behind() & mine())"]
+hanging = ["logr", "-r", "ancestors(hanging().., 2)"]
+
+# useful for getting history of a file
+history = ["logr", "-r", "..@"]
+
+[template-aliases]
+'format_timestamp(timestamp)' = 'timestamp.ago()'
+
