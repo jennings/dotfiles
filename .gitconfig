@@ -14,11 +14,6 @@
 [interactive]
 	diffFilter = delta --color-only
 [alias]
-	# shortcuts
-	br = !"f() { \
-		upstream=origin/$(git config remote.origin.defaultBranch || echo HEAD); \
-		git branch --sort=creatordate --format='%(HEAD) %(align:38,left)%(refname:short)%(end) (%(color:yellow)%(creatordate:short)%(color:default))%(color:red) [%(ahead-behind:'$upstream')]%(if)%(upstream:track)%(then)%(color:cyan)%(upstream:track)%(end) %(color:default)%(contents:subject)'; \
-		}; f"
 	co = checkout
 	cp = cherry-pick
 	dt = difftool
@@ -33,13 +28,23 @@
 	# comparing local and remote branches
 	in = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..@{u}
 	inm = !git log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' ..origin/$(git config remote.origin.defaultBranch || echo HEAD)
-	out = log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' @{u}..
+	out = log --show-linear-break --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' --branches --not --remotes=origin
 	outm = !git log --graph --date="format-local:%Y-%m-%d" --pretty='tformat:%C(auto)%h (%cd)%d %s' origin/$(git config remote.origin.defaultBranch || echo HEAD)..
 	updated = log --oneline --decorate --no-merges --format='%h %ad %s' --date=short ORIG_HEAD..
 
 	# finding obsolete branches
-	merged = !git branch --merged origin/master | grep -v master | grep -v HEAD
-	mergedr = !git branch -r --merged origin/master | grep -v master | grep -v HEAD | sed 's@origin/@@'
+	br = !"f() { \
+		upstream=origin/$(git config remote.origin.defaultBranch || echo HEAD); \
+		git branch --sort=creatordate --format='%(HEAD) %(align:38,left)%(refname:short)%(end) (%(color:yellow)%(creatordate:relative)%(color:default))%(color:red) [%(ahead-behind:'\"$upstream\"')]%(if)%(upstream:track)%(then)%(color:cyan)%(upstream:track)%(end) %(color:default)%(contents:subject)' $*; \
+		}; f"
+	merged = !"f() { \
+		upstream=origin/$(git config remote.origin.defaultBranch || echo HEAD); \
+		git branch --merged \"$upstream\" | grep -v master | grep -v HEAD $*; \
+		}; f"
+	mergedr = !"f() { \
+		upstream=origin/$(git config remote.origin.defaultBranch || echo HEAD); \
+		git branch -r --merged \"$upstream\" | grep -v master | grep -v HEAD | sed 's@origin/@@' $*; \
+		}; f"
 
 	# rebasing
 	fix = commit --no-verify --fixup
@@ -57,7 +62,10 @@
 	# interacting with github/bitbucket
 	copr = "!f() { git fetch origin pull/$1/head:pull/$1; git checkout pull/$1; }; f"
 	home = "!f() { open $(git-upstream-url home --remote $(git config remote.origin.url)) ; }; f"
-	pr = "!f() { open $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $(git rev-parse --abbrev-ref HEAD)) ; }; f"
+	pr = "!f() { \
+		branch=${1:-$(git rev-parse --abbrev-ref HEAD)}; \
+		open $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $branch) ; \
+		}; f"
 
 	amend = commit --amend --reuse-message HEAD
 	startnew = "!f() { [ -z \"$1\" ] && echo 'Must provide branch name' && exit 1; git checkout --no-track -b $1 origin/$(git config remote.origin.defaultBranch || echo HEAD);}; f"
