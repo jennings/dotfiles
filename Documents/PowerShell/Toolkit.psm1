@@ -1,3 +1,19 @@
+. "$PSScriptRoot\jj.ps1"
+
+function jjpush {
+    $chosen = jj git push $Args --dry-run 2>&1 | Select-string -raw -notmatch "Dry-run requested" | fzf -m --header-lines=1 --header-first --tac --exit-0
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "exited with code: $LASTEXITCODE"
+        return
+    }
+    $branches = $chosen | ForEach-Object { if ($_ -match "branch ((\w|-|_|/)+)\b") { $Matches[1] }}
+    if ($branches.Length -eq 0) {
+        Write-Error "nothing to do"
+        return
+    }
+    jj git push ($branches | ForEach-Object { @("-b", $_) })
+}
+
 New-Alias seq Get-Sequence
 function Get-Sequence {
     if ($Args.Count -ge 2) {
