@@ -41,6 +41,10 @@ hanging = ["logr", "-r", "ancestors(hanging().., 2)"]
 # useful for getting history of a file
 history = ["logr", "-r", "..@"]
 
+# navigating
+n = ["next", "--edit"]
+p = ["prev", "--edit"]
+
 [template-aliases]
 'format_timestamp(timestamp)' = 'timestamp.ago()'
 
