@@ -1,0 +1,14 @@
+# overrides for Windows machines
+[core]
+	autocrlf = true
+	safecrlf = true
+[difftool "bc"]
+	path = c:/Program Files/Beyond Compare 4/bcomp.exe
+[mergetool "bc"]
+	path = c:/Program Files/Beyond Compare 4/bcomp.exe
+[alias]
+	home = "!f() { start $(git-upstream-url home --remote $(git config remote.origin.url)) ; }; f"
+	pr = "!f() { \
+      branch=${1:-$(git rev-parse --abbrev-ref HEAD)}; \
+      start $(git-upstream-url new-pr --remote $(git config remote.origin.url) --branch $branch) ; \
+      }; f"

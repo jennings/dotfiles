@@ -3,9 +3,8 @@ name = "Stephen Jennings"
 
 [ui]
 editor = "nvim"
-diff-editor = "meld"
-#diff-editor = "kdiff3" # doesn't seem to support deleting files
-merge-editor = "kdiff3"
+diff-editor = "bc"
+merge-editor = "bc"
 
 default-command = "logr"
 
@@ -14,31 +13,63 @@ diff.format = "git"
 pager = ["delta", "--hunk-header-style", "plain"]
 paginate = "auto"
 
+[merge-tools.kdiff3]
+edit-args = ["--merge", "--cs", "CreateBakFiles=0", "$left", "$left", "$right"]
+
+[merge-tools.bc]
+program = "bcomp"
+diff-args = ["$left", "$right", "/leftreadonly", "/rightreadonly", "/expandall"]
+edit-args = ["$left", "$right", "/leftreadonly", "/expandall"]
+merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge", "/reviewconflicts"]
+# merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge"]
+
+[merge-tools.bc-3]
+program = "bcomp"
+edit-args = ["$left", "$right", "/expandall", "/mergeoutput=$right", "/leftreadonly", "/rightreadonly"]
+
+[merge-tools.difft]
+edit-args = ["$left", "$right", "--color", "always"]
+
 [revsets]
-# log = "@ | ancestors((remote_branches() | tags()).., 2) | trunk()"
-# default:
-log = 'default'
+log = 'slice'
 
 [revset-aliases]
-'def' = 'default'
 'default' = '@ | ancestors((immutable_heads() | no_log_heads()).., 2) | heads((immutable_heads() | no_log_heads()))'
+
+# set this in a repo to hide their ancestors from the default log revset
 'no_log_heads()' = 'none()'
+
+# view a revision's ancestry back to where it diverged from trunk()
 'stack' = 'stack(@)'
-#'stack(from)' = 'trunk()..(from::) | (trunk()..from)-'
-'stack(from)' = 'trunk()..(from::) | ancestors(trunk()..(from::), 2)'
-'branches_in_stack()' = 'remote_branches() & stack()'
+'stack(from)' = '(trunk()..from) | ancestors((trunk()..from), 2)'
+
+# view a revision's ancestry back to where it diverged from trunk(), plus
+# any revisions descended from it
 'slice' = 'slice(@)'
-'slice(from)' = 'trunk()::(from::)'
-'behind' = 'ancestors((trunk()..branches())::, 2)'
+'slice(from)' = '(trunk()..from):: | ancestors((trunk()..from)::, 2)'
+
+'branches_in_stack()' = 'remote_branches() & slice()'
+
+# anything that hasn't been pushed yet
+'behind' = 'remote_branches().. | ancestors(remote_branches().., 2)'
+
 'hanging' = "branches() | remote_branches() | tags()"
+
+# @ is annoying to type in PowerShell
+HEAD = "@"
+at = "@"
+wc = "@"
 
 [aliases]
 logr = ["log", "--reversed"]
 # viewing history
 behind = ["logr", "-r", "behind"]
+slice = ["logr", "-r", "slice"]
 stack = ["logr", "-r", "stack"]
-mine = ["logr", "-r", "trunk() | (behind & mine())"]
+mine = ["logr", "-r", "default & mine()"]
 hanging = ["logr", "-r", "ancestors(hanging.., 2)"]
+
+sync = ["rebase", "-d", "trunk()"]
 
 # useful for getting history of a file
 history = ["logr", "-r", "..@"]

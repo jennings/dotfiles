@@ -89,9 +89,9 @@
 [pull]
 	rebase = true
 [diff]
-	tool = kdiff3
+	tool = bc
 [merge]
-	tool = kdiff3
+	tool = bc
 [mergetool]
 	keepBackup = false
 	prompt = false
