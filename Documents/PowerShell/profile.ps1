@@ -22,5 +22,7 @@ function dotfiles {
     git --git-dir=${env:DOTFILES_REPO} --work-tree=$HOME $Args
 }
 
+$env:JJ_CONFIG = "${env:USERPROFILE}\.config\jj\config\"
+
 New-Alias paste Get-Clipboard
 New-Alias docker podman
