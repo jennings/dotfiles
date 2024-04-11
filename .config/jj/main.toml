@@ -1,17 +1,21 @@
 [user]
 name = "Stephen Jennings"
 
+[git]
+push-branch-prefix = 'jennings/push-'
+
 [ui]
-editor = "nvim"
+editor = "nvim -n"
 diff-editor = "bc"
 merge-editor = "bc"
 
 default-command = "logr"
 
+# paginate with delta
 diff.format = "git"
-
-pager = ["delta", "--hunk-header-style", "plain"]
+pager = ["delta", "--hunk-header-style", "plain", "--paging", "never"]
 paginate = "auto"
+log-synthetic-elided-nodes = false
 
 [merge-tools.kdiff3]
 edit-args = ["--merge", "--cs", "CreateBakFiles=0", "$left", "$left", "$right"]
@@ -34,7 +38,15 @@ edit-args = ["$left", "$right", "--color", "always"]
 log = 'slice'
 
 [revset-aliases]
-'default' = '@ | ancestors((immutable_heads() | no_log_heads()).., 2) | heads((immutable_heads() | no_log_heads()))'
+'default' = '@ | ancestors((immutable_heads() ~ no_log_heads()).., 2) | heads((immutable_heads() ~ no_log_heads()))'
+
+'open()' = 'mine() ~ ::immutable_heads()'
+'wip()' = 'description(glob:"wip:*") ~ ::immutable_heads()'
+'merged()' = '(branches() & ..trunk()) ~ trunk()'
+'mergedr()' = '(remote_branches() & ..trunk()) ~ trunk()'
+
+'immutable_heads()' = 'trunk() | tags() | additional_immutable_heads()'
+'additional_immutable_heads()' = 'none()'
 
 # set this in a repo to hide their ancestors from the default log revset
 'no_log_heads()' = 'none()'
@@ -54,6 +66,7 @@ log = 'slice'
 'behind' = 'remote_branches().. | ancestors(remote_branches().., 2)'
 
 'hanging' = "branches() | remote_branches() | tags()"
+floating = "all() ~ ::branches()"
 
 # @ is annoying to type in PowerShell
 HEAD = "@"
@@ -62,22 +75,24 @@ wc = "@"
 
 [aliases]
 logr = ["log", "--reversed"]
+logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
+
 # viewing history
-behind = ["logr", "-r", "behind"]
-slice = ["logr", "-r", "slice"]
-stack = ["logr", "-r", "stack"]
-mine = ["logr", "-r", "default & mine()"]
+open = ["logr", "-r", "open()"]
 hanging = ["logr", "-r", "ancestors(hanging.., 2)"]
 
-sync = ["rebase", "-d", "trunk()"]
+dt = ["diff", "--tool", "bc"]
+difftool = ["diff", "--tool", "bc"]
 
-# useful for getting history of a file
-history = ["logr", "-r", "..@"]
+diffbranch = ["diff", "--from", "trunk()"]
 
 # navigating
 n = ["next", "--edit"]
 p = ["prev", "--edit"]
 
+# bring a branch up to date with trunk()
+# works with `jj sync` or with `-b REV`
+sync = ["rebase", "--skip-empty", "-d", "trunk()"]
+
 [template-aliases]
 'format_timestamp(timestamp)' = 'timestamp.ago()'
-
