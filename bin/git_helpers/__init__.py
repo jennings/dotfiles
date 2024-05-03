@@ -26,7 +26,7 @@ def parse_remote_url(remote):
             "github"
         )
 
-    elif remote.startswith("git@ssh.dev.azure.com:"):
+    if remote.startswith("git@ssh.dev.azure.com:"):
         match = re.search(r"^git@ssh.dev.azure.com:v3/(.+)/(.+)/(.*?)(?:\.git)?(/|$)", remote)
         if not match: sys.exit(f"did not match Azure DevOps SSH remote: {remote}")
         return Repo(
@@ -34,7 +34,7 @@ def parse_remote_url(remote):
             "azuredevops"
         )
 
-    elif remote.startswith("git@bitbucket.org:"):
+    if remote.startswith("git@bitbucket.org:"):
         match = re.search(r"^git@bitbucket.org:(.+)/(.*?)(?:\.git)?(/|$)", remote)
         if not match: sys.exit(f"did not match Bitbucket SSH remote: {remote}")
         return Repo(
@@ -42,7 +42,7 @@ def parse_remote_url(remote):
             "bitbucket"
         )
 
-    elif remote.startswith("https://github.com/"):
+    if remote.startswith("https://github.com/"):
         match = re.search(r"^https://github.com/(.+)/(.*?)(?:\.git)?(/|$)", remote)
         if not match: sys.exit(f"did not match GitHub HTTPS remote: {remote}")
         return Repo(
@@ -50,12 +50,19 @@ def parse_remote_url(remote):
             "github"
         )
 
-    elif remote.startswith("https://bitbucket.org/"):
+    if remote.startswith("https://bitbucket.org/"):
         match = re.search(r"^https://bitbucket.org/(.+)/(.*?)(?:\.git)?(/|$)", remote)
         if not match: sys.exit(f"did not match Bitbucket HTTPS remote: {remote}")
         return Repo(
             f"https://bitbucket.org/{match.group(1)}/{match.group(2)}",
             "bitbucket"
+        )
+
+    match = re.search(r"^https://([a-zA-Z-]+@)?dev.azure.com/(.+)/(.+)/_git/(.+)", remote)
+    if match:
+        return Repo(
+            f"https://dev.azure.com/{match.group(2)}/{match.group(3)}/_git/{match.group(4)}",
+            "azuredevops"
         )
 
     else:
