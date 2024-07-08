@@ -11,6 +11,8 @@ merge-editor = "bc"
 
 default-command = "logr"
 
+allow-filesets = true
+
 # paginate with delta
 diff.format = "git"
 pager = ["delta", "--hunk-header-style", "plain", "--paging", "never"]
@@ -27,7 +29,7 @@ edit-args = ["$left", "$right", "/leftreadonly", "/expandall"]
 merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge", "/reviewconflicts"]
 # merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge"]
 
-[merge-tools.bc-3]
+[merge-tools.bc3]
 program = "bcomp"
 edit-args = ["$left", "$right", "/expandall", "/mergeoutput=$right", "/leftreadonly", "/rightreadonly"]
 
@@ -38,12 +40,24 @@ edit-args = ["$left", "$right", "--color", "always"]
 log = 'slice'
 
 [revset-aliases]
-'default' = '@ | ancestors((immutable_heads() ~ no_log_heads()).., 2) | heads((immutable_heads() ~ no_log_heads()))'
-
+# All my commits that haven't landed yet. This is the workhorse.
 'open()' = 'mine() ~ ::immutable_heads()'
+
+# All open remote branches
+'ropen()' = 'ancestors(::remote_branches() ~ immutable(), 2)'
+
+# Local work that has yet to be pushed
+'pending()' = 'ancestors(::branches() ~ ::remote_branches() ~ immutable(), 2)'
+
+# Work in progress
 'wip()' = 'description(glob:"wip:*") ~ ::immutable_heads()'
+
+# Branches that are already contained in the trunk
 'merged()' = '(branches() & ..trunk()) ~ trunk()'
 'mergedr()' = '(remote_branches() & ..trunk()) ~ trunk()'
+
+'recent' = 'recent(20)'
+'recent(count)' = 'ancestors(@, count)'
 
 'immutable_heads()' = 'trunk() | tags() | additional_immutable_heads()'
 'additional_immutable_heads()' = 'none()'
@@ -58,28 +72,29 @@ log = 'slice'
 # view a revision's ancestry back to where it diverged from trunk(), plus
 # any revisions descended from it
 'slice' = 'slice(@)'
-'slice(from)' = '(trunk()..from):: | ancestors((trunk()..from)::, 2)'
+'slice(from)' = 'ancestors(reachable(from, ~::trunk()), 2)'
 
-'branches_in_stack()' = 'remote_branches() & slice()'
+# see the ancestry of two heads back to where they diverged
+# usage: compare(abc | foo | bar)
+'compare(heads)' = 'connected(ancestors(::heads ~ ::trunk(), 2))'
+#'compare2(a,b)' = 'ancestors((stack(a) | stack(b)) ~ (stack(a) & stack(b) & trunk()), 2)'
 
 # anything that hasn't been pushed yet
+#'behind' = 'ancestors((trunk()..remote_branches())::, 2)'
 'behind' = 'remote_branches().. | ancestors(remote_branches().., 2)'
 
-'hanging' = "branches() | remote_branches() | tags()"
-floating = "all() ~ ::branches()"
-
 # @ is annoying to type in PowerShell
-HEAD = "@"
 at = "@"
-wc = "@"
 
 [aliases]
 logr = ["log", "--reversed"]
 logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
+oneline = ["logr", "-T", "simple_log_comfortable"]
 
 # viewing history
+#mine = ["logr", "-r", "default & mine()"]
 open = ["logr", "-r", "open()"]
-hanging = ["logr", "-r", "ancestors(hanging.., 2)"]
+ropen = ["logr", "-r", "ropen()"]
 
 dt = ["diff", "--tool", "bc"]
 difftool = ["diff", "--tool", "bc"]
@@ -96,3 +111,47 @@ sync = ["rebase", "--skip-empty", "-d", "trunk()"]
 
 [template-aliases]
 'format_timestamp(timestamp)' = 'timestamp.ago()'
+'simple_log_compact' = '''
+if(root,
+  builtin_log_root(change_id, commit_id),
+  label(if(current_working_copy, "working_copy"),
+    concat(
+      separate(" ",
+        builtin_change_id_with_hidden_and_divergent_info,
+        format_short_commit_id(commit_id),
+        "(" ++ format_timestamp(committer.timestamp()) ++ ")",
+        format_short_signature(author),
+        if(branches, "[" ++ branches ++ "]"),
+        if(conflict, label("conflict", "conflict")),
+      ) ++ "\n",
+      separate(" ",
+        if(empty, label("empty", "(empty)")),
+        if(description, description.first_line(), description_placeholder),
+      ) ++ "\n",
+    ),
+  )
+)
+'''
+'simple_log_comfortable' = 'simple_log_compact ++ "\n"'
+'log_git' = '''
+if(root,
+  format_root_commit(self),
+  label(if(current_working_copy, "working_copy"),
+    concat(
+      separate(" ",
+        format_short_commit_id(commit_id),
+        format_short_change_id_with_hidden_and_divergent_info(self),
+        format_short_signature(author),
+        if(conflict, label("conflict", "conflict")),
+      ) ++ "\n",
+      separate(" ",
+        if(empty, label("empty", "(empty)")),
+        if(description,
+          description.first_line(),
+          label(if(empty, "empty"), description_placeholder),
+        ),
+      ) ++ "\n",
+    ),
+  )
+) ++ "\n"
+'''
