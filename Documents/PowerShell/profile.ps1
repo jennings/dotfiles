@@ -23,6 +23,7 @@ function dotfiles {
 }
 
 $env:JJ_CONFIG = "${env:USERPROFILE}\.config\jj\"
+$env:KOMOREBI_CONFIG_HOME = "$env:USERPROFILE\.config\komorebi"
 
 New-Alias paste Get-Clipboard
 New-Alias docker podman
