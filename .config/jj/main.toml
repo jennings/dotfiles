@@ -34,6 +34,7 @@ program = "bcomp"
 edit-args = ["$left", "$right", "/expandall", "/mergeoutput=$right", "/leftreadonly", "/rightreadonly"]
 
 [merge-tools.difft]
+diff-args = ["$left", "$right", "--color", "always"]
 edit-args = ["$left", "$right", "--color", "always"]
 
 [revsets]
@@ -41,7 +42,8 @@ log = 'slice'
 
 [revset-aliases]
 # All my commits that haven't landed yet. This is the workhorse.
-'open()' = 'mine() ~ ::immutable_heads()'
+'open()' = 'open(mine())'
+'open(domain)' = 'domain ~ ::immutable_heads()'
 
 # All open remote branches
 'ropen()' = 'ancestors(::remote_branches() ~ immutable(), 2)'
@@ -92,8 +94,7 @@ logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
 oneline = ["logr", "-T", "simple_log_comfortable"]
 
 # viewing history
-#mine = ["logr", "-r", "default & mine()"]
-open = ["logr", "-r", "open()"]
+open = ["logr", "-r", "open(mine())"]
 ropen = ["logr", "-r", "ropen()"]
 
 dt = ["diff", "--tool", "bc"]
@@ -106,8 +107,9 @@ n = ["next", "--edit"]
 p = ["prev", "--edit"]
 
 # bring a branch up to date with trunk()
-# works with `jj sync` or with `-b REV`
-sync = ["rebase", "--skip-empty", "-d", "trunk()"]
+# works with `jj update` alone or with `-b REV`
+up = ["update"]
+update = ["rebase", "--skip-empty", "-d", "trunk()"]
 
 [template-aliases]
 'format_timestamp(timestamp)' = 'timestamp.ago()'

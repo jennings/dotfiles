@@ -1,15 +1,3 @@
 [templates]
-op_log_node = 'if(current_operation, "@", "◉")'
-log_node = '''
-label("node",
-  if(!self, label("elided", "⇋"),
-    if(current_working_copy, label("wcc", "@"),
-      if(immutable, label("immutable", "◆"),
-        if(description.starts_with("wip:"), label("wip", "◌"),
-          label("normal", "○")
-        )
-      )
-    )
-  )
-)
-'''
+op_log_node = 'builtin_op_log_node'
+log_node = 'builtin_log_node'
