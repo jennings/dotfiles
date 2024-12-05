@@ -2,6 +2,7 @@
 [core]
 	autocrlf = true
 	safecrlf = true
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [difftool "bc"]
 	path = c:/Program Files/Beyond Compare 4/bcomp.exe
 [mergetool "bc"]
