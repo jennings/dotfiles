@@ -59,22 +59,62 @@
     }
   ],
   "float_rules": [
+    // Spotify
+    {
+      "kind": "Exe",
+      "id": "Spotify.exe",
+      "matching_strategy": "Equals"
+    },
+    // Firefox
+    {
+      "kind": "title",
+      "id": "Firefox Developer Edition — Sharing Indicator",
+      "matching_strategy": "Equals"
+    },
+    // Beyond Compare
+    {
+      "kind": "Exe",
+      "id": "BCompare.exe",
+      "matching_strategy": "Equals"
+    },
     // SQL Server Management Studio
     {
       "kind": "Title",
       "id": "SSMS AAD Dialog Owner",
       "matching_strategy": "Equals"
     },
+    {
+      "kind": "class",
+      "id": "WindowsForms10.Window.8.app.0.[a-z0-9]+_r20_ad1",
+      "matching_strategy": "Regex"
+    },
+    // Azure Storage Explorer
+    {
+      "kind": "Title",
+      "id": "StorageExplorer",
+      "matching_strategy": "Equals"
+    },
     // Visual Studio
+    {
+      "kind": "Title",
+      "id": "VSIXInstaller.exe",
+      "matching_strategy": "Equals"
+    },
     {
       "kind": "Title",
       "id": "WindowsFormsParkingWindow",
       "matching_strategy": "Equals"
     },
     {
-      "kind": "Class",
-      "id": "HwndWrapper[IDE/devenv.exe.config;ThreadedWaitDialog;ce88727b-54ef-4ddc-8fd8-19489e9aa10d]",
+      "kind": "Exe",
+      "id": "ServiceHub.ThreadedWaitDialog.exe",
       "matching_strategy": "Equals"
+    },
+    // Microsoft Teams
+    {
+      "kind": "Title",
+      "id": "^Meeting compact view",
+      "matching_strategy": "Regex"
     }
   ]
 }
