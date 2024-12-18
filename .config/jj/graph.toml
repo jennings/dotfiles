@@ -36,17 +36,19 @@ log = 'log'
             format_short_commit_id(commit_id),
             surround("[", "]", bookmarks),
             if(conflict, label("conflict", "conflict")),
+          ),
+          "\n",
+          separate(" ",
             if(empty, label("empty", "(empty)")),
             if(description,
               description.first_line(),
             ),
-          ) ++ "\n",
-        ),
+          ),
+          "\n\n",
+        )
       )
     )
     '''
-
-'simple_comfortable' = 'simple ++ "\n"'
 
 log = '''
     if(root,
@@ -84,7 +86,7 @@ pr = '''
     self.git_refs().map(|r|
       if(r.name().contains("refs/remotes/") && !r.name().contains("refs/remotes/origin/main"),
         pr_base ++ r.name().remove_prefix("refs/remotes/origin/") ++ "\n",
-	""
+        ""
       )
     ).join("")
     '''
