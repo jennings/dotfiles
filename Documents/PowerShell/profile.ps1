@@ -87,6 +87,10 @@ function script:WatchmanMake {
     python (Get-Command -CommandType Application watchman-make)[0].Source @Args
 }
 Set-Alias watchman-make script:WatchmanMake
+function script:WatchmanReplicateSubscription {
+    python (Get-Command -CommandType Application watchman-replicate-subscription)[0].Source @Args
+}
+Set-Alias watchman-replicate-subscription script:WatchmanReplicateSubscription
 
 New-Alias paste Get-Clipboard
 New-Alias docker podman
