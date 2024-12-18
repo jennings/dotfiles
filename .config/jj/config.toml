@@ -14,13 +14,11 @@ editor = "nvim -n"
 diff-editor = "bc"
 merge-editor = "bc"
 
-default-command = "logr"
-
-allow-filesets = true
+default-command = "log"
 
 # paginate with delta
 diff.format = "git"
-pager = ["delta", "--hunk-header-style", "plain", "--paging", "never"]
+pager = ["delta", "--hunk-header-style", "plain"]
 paginate = "auto"
 
 [merge-tools.kdiff3]
@@ -107,9 +105,8 @@ merge-conflict-exit-codes = [1]
 at = "@"
 
 [aliases]
-logr = ["log", "--reversed"]
-logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
-oneline = ["logr", "-T", "simple_log_comfortable"]
+logc = ["log", "-T", "builtin_log_comfortable"]
+oneline = ["log", "-T", "simple_log_comfortable"]
 
 # Insert's a new commit without editing it. Expected usage:
 #
@@ -131,7 +128,7 @@ ws = ["workspace"]
 dup = ["duplicate"] # am I gen Z?
 
 # viewing history
-open = ["logr", "-r", "open(mine())"]
+open = ["log", "-r", "open(mine())"]
 
 dt = ["diff", "--tool", "bc"]
 difftool = ["diff", "--tool", "bc"]
