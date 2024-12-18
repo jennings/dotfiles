@@ -3,7 +3,7 @@ name = "Stephen Jennings"
 
 [git]
 push-bookmark-prefix = 'jennings/push-'
-private-commits = '(description(glob:"private:*") | description(glob:"wip:*"))'
+private-commits = 'private()'
 
 [ui]
 editor = "nvim -n"
