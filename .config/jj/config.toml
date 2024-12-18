@@ -42,12 +42,9 @@ edit-args = ["$left", "$right"]
 program = "difft"
 diff-args = ["$left", "$right", "--display", "inline"]
 
-[revsets]
-log = 'slice()'
-
 [revset-aliases]
 'default()' = 'default(2)'
-'default(n)' = '@ | trunk() | ancestors(immutable_heads().., n)'
+'default(n)' = 'present(@) | ancestors(immutable_heads().., n) | present(trunk())'
 
 # `additional_immutable_heads()` exists to add immutable heads in a repo's
 # config without redefining the entire revset
