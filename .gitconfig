@@ -13,6 +13,8 @@
 	defaultBranch = trunk
 [interactive]
 	diffFilter = delta --color-only
+[tag]
+	sort = version:refname
 [alias]
 	co = checkout
 	cp = cherry-pick
@@ -84,11 +86,23 @@
 	date = iso
 [fetch]
 	prune = true
+	pruneTags = true
+	all = true
 [push]
 	default = simple
+	autoSetupRemote = true
 [pull]
 	rebase = true
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+	autoupdate = true
 [diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 	tool = bc
 [merge]
 	tool = bc
@@ -107,6 +121,8 @@
 	insteadOf = https://git.heroku.com/
 [rebase]
 	autoSquash = true
+	autoStash = true
+	updateRefs = true
 # must be last so it can recursively include .gitconfig.windows
 [include]
 	path = ~/.gitconfig.local
