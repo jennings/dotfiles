@@ -24,6 +24,21 @@ log = 'log'
 
 [template-aliases]
 'format_timestamp(timestamp)' = 'timestamp.ago()'
+'hyperlink(url, text)' = '''
+    concat(
+      raw_escape_sequence("\e]8;;" ++ url ++ "\e\\"),
+      text,
+      raw_escape_sequence("\e]8;;\e\\"),
+    )
+'''
+'render_bookmarks(commit)' = '''
+    commit.bookmarks().map(|b|
+      if(b.remote(),
+        b,
+        hyperlink(pr_base ++ b.name(), b),
+      )
+    )
+'''
 
 # Greatly simplified output, useful for demonstrations
 'simple' = '''
@@ -60,7 +75,7 @@ log = '''
             format_short_signature(author),
             if(!committer.email(), email_placeholder),
             format_timestamp(committer.timestamp()),
-            bookmarks,
+            render_bookmarks(self),
             tags,
             working_copies,
             format_short_commit_id(commit_id),
@@ -81,12 +96,3 @@ log = '''
 log_comfortable = 'log ++ "\n"'
 
 pr_base = '"undefined"'
-pr = '''
-    log ++
-    self.git_refs().map(|r|
-      if(r.name().contains("refs/remotes/") && !r.name().contains("refs/remotes/origin/main"),
-        pr_base ++ r.name().remove_prefix("refs/remotes/origin/") ++ "\n",
-        ""
-      )
-    ).join("")
-    '''

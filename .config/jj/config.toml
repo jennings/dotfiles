@@ -107,9 +107,6 @@ logr = ["log", "--reversed"]
 logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
 oneline = ["logr", "-T", "simple_log_comfortable"]
 
-# show the URLs to open a code review
-pr = ["logr", "-T", "pr"]
-
 # abbreviations
 b = ["bookmark"]
 sq = ["squash"]
