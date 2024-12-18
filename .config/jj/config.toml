@@ -1,9 +1,13 @@
+#:schema https://jj-vcs.github.io/jj/prerelease/config-schema.json
+
 [user]
 name = "Stephen Jennings"
 
 [git]
+push-new-bookmarks = true
 push-bookmark-prefix = 'jennings/push-'
 private-commits = 'private()'
+subprocess = true
 
 [ui]
 editor = "nvim -n"
@@ -18,7 +22,6 @@ allow-filesets = true
 diff.format = "git"
 pager = ["delta", "--hunk-header-style", "plain", "--paging", "never"]
 paginate = "auto"
-log-synthetic-elided-nodes = false
 
 [merge-tools.kdiff3]
 edit-args = ["--merge", "--cs", "CreateBakFiles=0", "$left", "$left", "$right"]
@@ -42,22 +45,30 @@ edit-args = ["$left", "$right"]
 program = "difft"
 diff-args = ["$left", "$right", "--display", "inline"]
 
+[merge-tools.mergiraf]
+program = "mergiraf"
+merge-args = ["merge", "$base", "$left", "$right", "-o", "$output", "-l", "$marker_length", "--fast"]
+merge-conflict-exit-codes = [1]
+
 [revset-aliases]
-'default()' = 'default(2)'
-'default(n)' = 'present(@) | ancestors(immutable_heads().., n) | present(trunk())'
+'default()' = 'present(@) | ancestors(immutable_heads().., 2) | present(trunk())'
 
 # `additional_immutable_heads()` exists to add immutable heads in a repo's
 # config without redefining the entire revset
-'immutable_heads()' = 'trunk() | tags() | untracked_remote_bookmarks() | additional_immutable_heads()'
+'immutable_heads()' = 'builtin_immutable_heads() | additional_immutable_heads()'
 'additional_immutable_heads()' = 'none()'
+
+# Explain why a revision is immutable
+'why_immutable(r)' = 'r | roots(r:: & immutable_heads())'
 
 # View the entire branch being worked on
 'slice()' = 'slice(@)'
 'slice(from)' = 'ancestors(reachable(from, mutable()), 2)'
 
-# All my commits that haven't landed yet. This is the workhorse.
+# All my commits that haven't landed yet. I use this one constantly.
 'open()' = 'open(mine())'
-'open(domain)' = 'domain ~ ::immutable_heads()'
+'open(domain)' = 'ancestors(domain ~ ::immutable_heads(), 2) ~ ::trunk()'
+'open_bookmarks()' = 'ancestors((mine() & bookmarks()) ~ ::immutable_heads(), 2)'
 
 'scrap' = 'reachable(open() & description(exact:""), mutable())'
 
@@ -71,14 +82,7 @@ diff-args = ["$left", "$right", "--display", "inline"]
 'private()' = '(description(glob:"private:*") | description(glob:"wip:*"))'
 
 # Branches that are already contained in the trunk (or any other commit)
-'merged()' = 'merged(trunk())'
-'merged(into)' = 'bookmarks() & ..into'
-'mergedr()' = 'mergedr(trunk())'
-'mergedr(into)' = 'remote_bookmarks() & ..into'
-
-# history leading up to the working copy, like git log
-'last()' = 'last(20)'
-'last(n)' = 'ancestors(@, n)'
+'cleanup()' = '(bookmarks() | remote_bookmarks()) & ::immutable_heads() ~ immutable_heads()'
 
 # Shows recent work with a little bit of context
 'recent()' = 'recent(after:"14 days ago")'
@@ -107,15 +111,27 @@ logr = ["log", "--reversed"]
 logc = ["log", "--reversed", "-T", "builtin_log_comfortable"]
 oneline = ["logr", "-T", "simple_log_comfortable"]
 
+# Insert's a new commit without editing it. Expected usage:
+#
+#   $ jj insert -B xyz -m "foo"
+insert = ["new", "--no-edit"]
+
+# if you've checked out an old commit that is no longer ignoring huge files in
+# your working copy, prefix a command with no-track to escape:
+#
+#   $ jj no-track new main
+no-track = ["--config", "snapshot.auto-track='none()'"]
+
+# Enables paging
+pager = ["--config", 'ui.pager=["delta", "--hunk-header-style", "plain"]']
+
 # abbreviations
-b = ["bookmark"]
 sq = ["squash"]
 ws = ["workspace"]
+dup = ["duplicate"] # am I gen Z?
 
 # viewing history
 open = ["logr", "-r", "open(mine())"]
-ropen = ["logr", "-r", "ropen()"]
-recent = ["logr", "-r", "recent()"]
 
 dt = ["diff", "--tool", "bc"]
 difftool = ["diff", "--tool", "bc"]
@@ -128,14 +144,7 @@ p = ["prev", "--edit"]
 # works with `jj update` alone or with `-b REV`
 up = ["rebase", "--skip-emptied", "-d", "trunk()"]
 
-changed = ["diff", "--name-only"]
-pushstack = ["git", "push", "-r", "trunk()..@"]
+simplify = ["simplify-parents", "-s", "roots(slice(@) ~ immutable())"]
 
-all-bookmark-names = ["bookmark", "list", "--all", "-T", '''
-    if(!(remote.starts_with("git") && remote.ends_with("git")),
-        separate("@", name, remote) ++ "\n")
-''']
-
-# outputs one change ID per line, useful for piping to `wc -l` or
-# `Measure-Object`
-count = ["log", "--no-graph", "-T", 'change_id ++ "\n"']
+# I am rude
+blame = ["file", "annotate"]

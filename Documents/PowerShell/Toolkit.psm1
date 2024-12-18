@@ -14,17 +14,18 @@ function jjpush {
     jj git push ($branches | ForEach-Object { @("-b", $_) })
 }
 
-New-Alias seq Get-Sequence
-function Get-Sequence {
-    if ($Args.Count -ge 2) {
-        $start = $Args[0]
-        $end = $Args[1]
-    } elseif ($Args.Count -eq 1) {
-        $start = 1
-        $end = $Args[0]
-    }
-    [System.Linq.Enumerable]::Range($start, $end - $start + 1)
+function New-ScratchDirectory {
+    $temp = [System.IO.Path]::GetTempPath()
+    $uniq = [Guid]::NewGuid()
+    $workspace = "$temp$uniq"
+    mkdir $workspace | out-null
+    "Created workspace: $workspace" | Out-Host
+    pwsh -WorkingDirectory $workspace -NoExit -Command "function prompt { 'SCRATCH> ' }"
+    "Removing workspace: $workspace" | Out-Host
+    Remove-Item -Force -Recurse $workspace | Out-null
 }
+
+New-Alias scratch New-ScratchDirectory
 
 New-Alias xargs Invoke-Xargs
 function Invoke-Xargs {
@@ -62,7 +63,6 @@ function Invoke-EnvironmentChooser {
     }
 }
 
-New-Alias terraform Invoke-TerraformWithAutomaticOpen
 function Invoke-TerraformWithAutomaticOpen {
     # .exe to avoid the alias below
     terraform.exe $Args | foreach-object {
