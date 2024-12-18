@@ -1,4 +1,3 @@
-
 function ImportIf-Module {
     param(
         $Name,
@@ -12,17 +11,10 @@ function ImportIf-Module {
     }
 }
 
-function JJPrompt {
-    jj --ignore-working-copy log -l 1 -r "@" -T 'concat(" [", separate(" ", change_id.shortest(3), render_bookmarks(self), if(empty,"(empty)",""), if(conflict,"(conflict)","")), "]")' --no-graph --color always 2> $null
-}
-
 Measure-Command {
-    ImportIf-Module -Name Posh-Git -PostImport {
-        $global:GitPromptSettings.DefaultPromptPath.ForegroundColor = 'Gold'
-        $global:GitPromptSettings.DefaultPromptBeforeSuffix.Text = '$(JJPrompt)`n'
-    } | Out-Default
-} | % { "Imported Posh-Git in {0:N0}ms" -f $_.TotalMilliseconds }
-
+    import-module (Join-Path $PSScriptRoot "jj.psm1") -DisableNameChecking
+    Invoke-JJCompletion
+} | % { "Imported jj.psm1 in {0:N0}ms" -f $_.TotalMilliseconds }
 Measure-Command {
     import-module (Join-Path $PSScriptRoot "Toolkit.psm1") -DisableNameChecking
 } | % { "Imported Toolkit.psm1 in {0:N0}ms" -f $_.TotalMilliseconds }
@@ -67,6 +59,12 @@ Set-PSReadLineKeyHandler -Key "Ctrl+/" -ScriptBlock {
     }
 }
 
+function Prompt {
+    $path = $executionContext.SessionState.Path.CurrentLocation
+    $jj = Get-JJPrompt -Repository $path
+    "`e[38;2;255;215;0m$path`e[0m$jj`n> "
+}
+
 $script:DefaultPrompt = Get-Content Function:\Prompt
 
 Function Reset-Prompt {
@@ -76,7 +74,8 @@ Function Reset-Prompt {
 $env:EDITOR = "nvim"
 
 # Set PAGER so delta uses it
-$env:PAGER='"C:\Program Files\Git\usr\bin\less.exe" -FRX'
+$env:PAGER = '"C:\Program Files\Git\usr\bin\less.exe" -FRX'
+$env:LESS   = "FRX"
 
 $env:JJ_CONFIG = "${env:USERPROFILE}\.config\jj\"
 $env:KOMOREBI_CONFIG_HOME = "$env:USERPROFILE\.config\komorebi"

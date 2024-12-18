@@ -1,0 +1,26 @@
+[template-aliases]
+
+"format_file_changes(sym, cs)" = "if(cs.len() > 0, sym++cs.len())"
+
+"format_diff(files)" = """
+    separate(" ",
+      format_file_changes("+", files.filter(|f|f.status()=="added")),
+      format_file_changes("~", files.filter(|f|f.status()=="modified")),
+      format_file_changes("%", files.filter(|f|f.status()=="copied")),
+      format_file_changes(">", files.filter(|f|f.status()=="renamed")),
+      format_file_changes("-", files.filter(|f|f.status()=="removed")),
+    )
+    """
+"format_prompt" = """
+    concat(
+      " [",
+      separate(" ",
+        change_id.shortest(3),
+        render_bookmarks(self),
+        if(!empty, format_diff(self.diff().files())),
+        if(conflict, "!!", ""),
+        if(divergent, "??", "")
+        ),
+      "]"
+    )
+  """
