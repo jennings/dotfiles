@@ -63,26 +63,33 @@ function Invoke-TerraformWithAutomaticOpen {
     }
 }
 
-Add-Type @'
-    using System;
-    using System.Runtime.InteropServices;
-    public class WinAp {
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
+$script:WinApAdded = $false
+function EnsureWinAp {
+    if (-not $script:WinApAdded) {
+        Add-Type @'
+            using System;
+            using System.Runtime.InteropServices;
+            public class WinAp {
+                [DllImport("user32.dll")]
+                public static extern IntPtr GetForegroundWindow();
 
-        [DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+                [DllImport("user32.dll")]
+                public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+                [DllImport("user32.dll")]
+                public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        [DllImport("user32.dll")]
-        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-    }
+                [DllImport("user32.dll")]
+                public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+            }
 '@
+        $script:WinApAdded = $true
+    }
+}
 
 function Invoke-ForegroundWindowChanges {
     $prev = $null
+    EnsureWinAp
     while ($true) {
         $h = [WinAp]::GetForegroundWindow()
         if ($h -ne $prev) {
@@ -102,6 +109,7 @@ function Invoke-GatherWindows {
         return
     }
 
+    EnsureWinAp
     $hs = (Get-Process -Name $ProcessName | ? MainWindowTitle).MainWindowHandle
     if ($hs -eq $null) { return }
 
