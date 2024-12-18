@@ -13,7 +13,6 @@ function ImportIf-Module {
 
 Measure-Command {
     import-module (Join-Path $PSScriptRoot "jj.psm1") -DisableNameChecking
-    Invoke-JJCompletion
 } | % { "Imported jj.psm1 in {0:N0}ms" -f $_.TotalMilliseconds }
 Measure-Command {
     import-module (Join-Path $PSScriptRoot "Toolkit.psm1") -DisableNameChecking
@@ -59,8 +58,11 @@ Set-PSReadLineKeyHandler -Key "Ctrl+/" -ScriptBlock {
     }
 }
 
+Invoke-StartJJCompletion
+
 function Prompt {
-    $path = $executionContext.SessionState.Path.CurrentLocation
+    Invoke-EnsureJJCompletion
+    $path = $ExecutionContext.SessionState.Path.CurrentLocation
     $jj = Get-JJPrompt -Repository $path
     "`e[38;2;255;215;0m$path`e[0m$jj`n> "
 }
