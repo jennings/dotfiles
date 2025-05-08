@@ -1,6 +1,0 @@
-[ui]
-ignore = ~/.hgignore
-
-[extensions]
-hgext.mq=
-show=
