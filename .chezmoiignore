@@ -1,3 +1,7 @@
 README.md
 packages/
 scripts/
+
+{{ if ne .chezmoi.os "windows" }}
+.config/komorebi/
+{{ end }}
