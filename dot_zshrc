@@ -1,20 +1,3 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
-# Customize to your needs...
-
-#prompt nicoulaj
-prompt steeef
-
 # No need for ^S and ^Q to ruin everything
 unsetopt flow_control
 
@@ -26,16 +9,14 @@ alias paste=pbpaste
 alias dockerc=docker-compose
 alias dotfiles='git --git-dir="$DOTFILES_REPO" --work-tree=$HOME'
 
-export EDITOR="/usr/local/bin/vim"
+export EDITOR="nvim"
 export VISUAL=$EDITOR
 export FIGNORE=".o:~:.swp"
 export GOPATH=~
-export LESS=-FRSX
-export DOTFILES_REPO="~/src/github.com/jennings/dotfiles.git"
+export LESS=-FRX
+export DOTFILES_REPO=~/src/github.com/jennings/dotfiles.git
 
 PATH=/usr/local/bin:$PATH
-PATH=/usr/local/Cellar/node/6.8.1/bin:$PATH
-PATH=~/.config/yarn/global/node_modules/.bin:$PATH
 PATH=~/.cargo/bin:$PATH
 PATH=~/.cabal/bin:$PATH
 PATH=~/bin:$PATH
@@ -57,3 +38,14 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+
+# jj
+autoload -U compinit
+compinit
+source <(jj util completion zsh)
+source <(COMPLETE=zsh jj)
+
+export NOMAD_ADDR=http://pi-3.bear-mermaid.ts.net:4646
+
+eval "$(starship init zsh)"
+eval "$(atuin init zsh)"
