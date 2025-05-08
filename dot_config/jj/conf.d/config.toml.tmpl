@@ -26,14 +26,15 @@ edit-args = ["--merge", "--cs", "CreateBakFiles=0", "$left", "$left", "$right"]
 
 [merge-tools.bc]
 program = "bcomp"
+{{ if eq .chezmoi.os "windows" }}
 diff-args = ["$left", "$right", "/leftreadonly", "/rightreadonly", "/expandall"]
 edit-args = ["$left", "$right", "/leftreadonly", "/expandall"]
 merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge", "/reviewconflicts"]
-# merge-args = ["$left", "$right", "$base", "$output", "/expandall", "/automerge"]
-
-[merge-tools.bc3]
-program = "bcomp"
-edit-args = ["$left", "$right", "/expandall", "/mergeoutput=$right", "/leftreadonly", "/rightreadonly"]
+{{ else }}
+diff-args = ["$left", "$right", "-leftreadonly", "-rightreadonly", "-expandall"]
+edit-args = ["$left", "$right", "-leftreadonly", "-expandall"]
+merge-args = ["$left", "$right", "$base", "$output", "-expandall", "-automerge", "-reviewconflicts"]
+{{ end }}
 
 [merge-tools.difft]
 diff-args = ["$left", "$right"]
