@@ -49,3 +49,8 @@ export NOMAD_ADDR=http://pi-3.bear-mermaid.ts.net:4646
 
 eval "$(starship init zsh)"
 eval "$(atuin init zsh)"
+
+function z {
+    cd "$(fd . "${HOME}" --type d --color never | fzf --select-1 --query "${*}")"
+    ls
+}
