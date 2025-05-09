@@ -2,6 +2,8 @@ README.md
 packages/
 scripts/
 
-{{ if ne .chezmoi.os "windows" }}
+{{ if eq .chezmoi.os "windows" }}
+.zshrc
+{{ else }}
 .config/komorebi/
 {{ end }}
