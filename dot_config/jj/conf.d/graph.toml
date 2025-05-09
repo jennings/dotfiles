@@ -73,6 +73,16 @@ log = '''
             if(!author.email(), email_placeholder),
             format_timestamp(commit_timestamp(self)),
             render_bookmarks(self),
+            if(!immutable,
+              description.lines()
+                .filter(|d| d.starts_with("Pull Request: "))
+                .map(|d| hyperlink(
+                  d.match(regex:'https://.+/pull/(\d+)$'),
+                  label("bookmark",
+                    d.replace(regex:'.*/pull/(\d+)$', '[#$1]')
+                  ),
+                ))
+            ),
             tags,
             working_copies,
             format_short_commit_id(commit_id),
