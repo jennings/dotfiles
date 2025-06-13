@@ -13,6 +13,9 @@
 	defaultBranch = trunk
 [interactive]
 	diffFilter = delta --color-only
+[delta]
+	line-numbers = true
+	hyperlinks = true
 [tag]
 	sort = version:refname
 [alias]
