@@ -16,7 +16,7 @@ merge-editor = "bc"
 default-command = "log"
 
 # paginate with delta
-diff.format = "git"
+diff-formatter = ":git"
 pager = ["delta", "--hunk-header-style", "plain"]
 paginate = "auto"
 
@@ -47,6 +47,9 @@ diff-args = ["$left", "$right", "--display", "inline"]
 program = "mergiraf"
 merge-args = ["merge", "$base", "$left", "$right", "-o", "$output", "-l", "$marker_length", "--fast"]
 merge-conflict-exit-codes = [1]
+
+[revsets]
+log-graph-prioritize = 'trunk() | present(@)'
 
 [revset-aliases]
 'default()' = 'present(@) | ancestors(immutable_heads().., 2) | present(trunk())'
@@ -106,7 +109,9 @@ at = "@"
 
 [aliases]
 logc = ["log", "-T", "builtin_log_comfortable"]
-oneline = ["log", "-T", "simple_log_comfortable"]
+
+slice = ["log", "-r", "slice()"]
+stack = ["log", "-r", "stack()"]
 
 # Insert's a new commit without editing it. Expected usage:
 #
