@@ -3,6 +3,8 @@ packages/
 scripts/
 
 {{ if eq .chezmoi.os "windows" }}
+.ansible.cfg
+.tmux.conf
 .zshrc
 {{ else }}
 .config/komorebi/
